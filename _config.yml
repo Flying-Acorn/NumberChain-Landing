@@ -1,2 +1,4 @@
-include: [".well-known"]
+include:
+  - .well-known
+  - LvJP
 permalink: /:path/
