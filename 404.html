@@ -10,21 +10,33 @@
             // iOS detection
             if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
                 // Try to open the app using a universal link
-                window.location.href = "https://nc.flyingacorn.studio/LvJP/foo";
+                const appLink = "https://nc.flyingacorn.studio/LvJP/foo";
+                const appStoreLink = "https://apps.apple.com/us/app/%D8%B2%D9%86%D8%AC%DB%8C%D8%B1%D9%87-%D8%A7%D8%B9%D8%AF%D8%A7%D8%AF-2248/id6569247863";
+
+                // Open the app link
+                window.location.href = appLink;
 
                 // Fallback to App Store if the app is not installed
                 setTimeout(() => {
-                    window.location.href = "https://apps.apple.com/us/app/%D8%B2%D9%86%D8%AC%DB%8C%D8%B1%D9%87-%D8%A7%D8%B9%D8%AF%D8%A7%D8%AF-2248/id6569247863";
+                    if (document.visibilityState === "hidden") {
+                        // If the app opens, the page will become hidden
+                        return;
+                    }
+                    window.location.href = appStoreLink;
                 }, 2000);
             }
             // Android detection
             else if (/android/i.test(userAgent)) {
                 // Try to open the app using market://
-                window.location.href = "market://details?id=com.FlyingAcorn.NumberChain";
+                const marketLink = "market://details?id=com.FlyingAcorn.NumberChain";
+                const playStoreLink = "https://play.google.com/store/apps/details?id=com.FlyingAcorn.NumberChain";
+
+                // Open the market link
+                window.location.href = marketLink;
 
                 // Fallback to Google Play if the app is not installed
                 setTimeout(() => {
-                    window.location.href = "https://play.google.com/store/apps/details?id=com.FlyingAcorn.NumberChain";
+                    window.location.href = playStoreLink;
                 }, 2000);
             }
             // Fallback to website for other platforms
