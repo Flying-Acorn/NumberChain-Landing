@@ -4,8 +4,8 @@
     --secondary-color: #43a047; /* Green */
     --accent-color: #ffffff; /* White for button background */
     --danger-color: #e53935; /* Red */
-    --background-color: #f3f3f3;
-    --text-color: #333;
+    --background-color: #6a1b9a; /* Violet background */
+    --text-color: #ffffff; /* White text for contrast */
     --white: #ffffff;
     --button-border-color: #1e88e5; /* Blue for button borders */
 }
@@ -24,8 +24,8 @@ body {
     margin: 0;
     padding: 0;
     text-align: center;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    background-color: var(--background-color); /* Violet background */
+    color: var(--text-color); /* White text */
     direction: rtl;
     display: flex;
     flex-direction: column;
@@ -55,6 +55,7 @@ body {
 .download-section {
     width: 100%;
     text-align: center;
+    background-color: inherit; /* Inherit violet background */
 }
 
 .download-buttons {
@@ -70,7 +71,7 @@ body {
     gap: 8px;
     padding: 10px 20px;
     background-color: var(--accent-color); /* White background */
-    color: var(--text-color); /* Dark text for contrast */
+    color: #000000; /* Black text for better visibility */
     text-decoration: none;
     border: 2px solid var(--button-border-color); /* Blue border */
     border-radius: 8px;
