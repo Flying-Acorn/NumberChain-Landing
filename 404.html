@@ -9,25 +9,31 @@
 
             // iOS detection
             if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                // Try to open the app using a universal link
                 const appLink = "https://nc.flyingacorn.studio/LvJP/foo";
                 const appStoreLink = "https://apps.apple.com/us/app/%D8%B2%D9%86%D8%AC%DB%8C%D8%B1%D9%87-%D8%A7%D8%B9%D8%AF%D8%A7%D8%AF-2248/id6569247863";
 
-                // Open the app link
-                window.location.href = appLink;
+                // Prevent infinite refresh loop by checking a flag in sessionStorage
+                if (!sessionStorage.getItem("appRedirectAttempted")) {
+                    sessionStorage.setItem("appRedirectAttempted", "true");
 
-                // Fallback to App Store if the app is not installed
-                setTimeout(() => {
-                    if (document.visibilityState === "hidden") {
-                        // If the app opens, the page will become hidden
-                        return;
-                    }
+                    // Open the app link
+                    window.location.href = appLink;
+
+                    // Fallback to App Store if the app is not installed
+                    setTimeout(() => {
+                        if (document.visibilityState === "hidden") {
+                            // If the app opens, the page will become hidden
+                            return;
+                        }
+                        window.location.href = appStoreLink;
+                    }, 2000);
+                } else {
+                    // If already attempted, directly redirect to the App Store
                     window.location.href = appStoreLink;
-                }, 2000);
+                }
             }
             // Android detection
             else if (/android/i.test(userAgent)) {
-                // Try to open the app using market://
                 const marketLink = "market://details?id=com.FlyingAcorn.NumberChain";
                 const playStoreLink = "https://play.google.com/store/apps/details?id=com.FlyingAcorn.NumberChain";
 
