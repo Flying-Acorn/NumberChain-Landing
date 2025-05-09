@@ -1,61 +1,57 @@
+/* Global Colors */
+:root {
+    --primary-color: #6a1b9a; /* Purple */
+    --secondary-color: #43a047; /* Green */
+    --accent-color: #ffffff; /* White for button background */
+    --danger-color: #e53935; /* Red */
+    --background-color: #f3f3f3;
+    --text-color: #333;
+    --white: #ffffff;
+    --button-border-color: #1e88e5; /* Blue for button borders */
+}
+
+/* Font Import */
+@font-face {
+    font-family: 'YekanBakh';
+    src: url('../fonts/YekanBakh-Regular.woff') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Global Styles */
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'YekanBakh', sans-serif;
     margin: 0;
     padding: 0;
     text-align: center;
-    background-color: #f9f9f9;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
     direction: rtl;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
+/* Header Styles */
 .game-header {
     padding: 20px;
-    background-color: #5bbad5;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-align: center;
 }
 
-.game-main-image {
-    border-radius: 16px;
-    margin-bottom: 20px;
-}
-
+/* Main Content Styles */
 .game-content {
     padding: 20px;
     flex: 1;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    text-align: right;
+    align-items: center;
+    text-align: center;
     gap: 20px;
 }
 
-.game-description {
-    width: 100%;
-}
-
-.custom-bullet-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.custom-bullet-list li {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.bullet-icon {
-    font-size: 24px;
-    color: #5bbad5;
-}
-
+/* Download Section */
 .download-section {
     width: 100%;
     text-align: center;
@@ -73,24 +69,54 @@ body {
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
+    background-color: var(--accent-color); /* White background */
+    color: var(--text-color); /* Dark text for contrast */
     text-decoration: none;
+    border: 2px solid var(--button-border-color); /* Blue border */
     border-radius: 8px;
     font-size: 16px;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .download-btn img {
     vertical-align: middle;
+    width: 24px;
+    height: 24px;
 }
 
 .download-btn:hover {
-    background-color: #0056b3;
+    background-color: var(--button-border-color); /* Blue background on hover */
+    color: var(--white); /* White text on hover */
 }
 
+/* Footer Styles */
 .game-footer {
     padding: 10px;
-    background-color: #333;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-align: center;
+}
+
+/* Cover Image Styles */
+.game-main-image {
+    width: 600px; /* Increased size for the cover image */
+    height: auto;
+    border-radius: 12px; /* Slightly rounded corners */
+    margin-bottom: 20px;
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .game-main-image {
+        width: 300px; /* Larger size for mobile screens */
+    }
+    .download-buttons a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 10px;
+    }
 }
