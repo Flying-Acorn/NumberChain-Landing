@@ -1,4 +1,3 @@
-<!-- filepath: LvJP/404.html -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,11 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
         window.onload = function () {
-            if (!window.location.pathname.startsWith('/LvJP/')) {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+            // iOS detection
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                // Try to open the app using a universal link
+                window.location.href = "https://nc.flyingacorn.studio/LvJP/foo";
+
+                // Fallback to App Store if the app is not installed
+                setTimeout(() => {
+                    window.location.href = "https://apps.apple.com/us/app/%D8%B2%D9%86%D8%AC%DB%8C%D8%B1%D9%87-%D8%A7%D8%B9%D8%AF%D8%A7%D8%AF-2248/id6569247863";
+                }, 2000);
+            }
+            // Android detection
+            else if (/android/i.test(userAgent)) {
+                // Try to open the app using market://
+                window.location.href = "market://details?id=com.FlyingAcorn.NumberChain";
+
+                // Fallback to Google Play if the app is not installed
+                setTimeout(() => {
+                    window.location.href = "https://play.google.com/store/apps/details?id=com.FlyingAcorn.NumberChain";
+                }, 2000);
+            }
+            // Fallback to website for other platforms
+            else {
                 window.location.href = "https://nc.flyingacorn.studio";
             }
         };
-    </script></head>
+    </script>
+</head>
 <body>
 </body>
 </html>
