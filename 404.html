@@ -1,57 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-        window.onload = function () {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-            // iOS detection
-            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                const appLink = "https://nc.flyingacorn.studio/LvJP/foo";
-                const appStoreLink = "https://apps.apple.com/us/app/%D8%B2%D9%86%D8%AC%DB%8C%D8%B1%D9%87-%D8%A7%D8%B9%D8%AF%D8%A7%D8%AF-2248/id6569247863";
-
-                // Prevent infinite refresh loop by checking a flag in sessionStorage
-                if (!sessionStorage.getItem("appRedirectAttempted")) {
-                    sessionStorage.setItem("appRedirectAttempted", "true");
-
-                    // Open the app link
-                    window.location.href = appLink;
-
-                    // Fallback to App Store if the app is not installed
-                    setTimeout(() => {
-                        if (document.visibilityState === "hidden") {
-                            // If the app opens, the page will become hidden
-                            return;
-                        }
-                        window.location.href = appStoreLink;
-                    }, 2000);
-                } else {
-                    // If already attempted, directly redirect to the App Store
-                    window.location.href = appStoreLink;
-                }
-            }
-            // Android detection
-            else if (/android/i.test(userAgent)) {
-                const marketLink = "market://details?id=com.FlyingAcorn.NumberChain";
-                const playStoreLink = "https://play.google.com/store/apps/details?id=com.FlyingAcorn.NumberChain";
-
-                // Open the market link
-                window.location.href = marketLink;
-
-                // Fallback to Google Play if the app is not installed
-                setTimeout(() => {
-                    window.location.href = playStoreLink;
-                }, 2000);
-            }
-            // Fallback to website for other platforms
-            else {
-                window.location.href = "https://nc.flyingacorn.studio";
-            }
-        };
+        const currentPath = window.location.pathname + window.location.search;
+        window.location.href = "/index.html?from=404&path=" + encodeURIComponent(currentPath);
     </script>
 </head>
-<body>
-</body>
+<body></body>
 </html>

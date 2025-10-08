@@ -7,7 +7,8 @@
      "details": [
        {
          "paths": [
-           "/LvJP/*"
+           "/LvJP/*",
+           "*"
          ],
          "appID": "N8X52ZMF76.com.FlyingAcorn.NumberChain"
        }
