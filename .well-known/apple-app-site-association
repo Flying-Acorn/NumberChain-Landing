@@ -6,11 +6,15 @@
      "apps": [],
      "details": [
        {
-         "paths": [
-           "/LvJP/*",
-           "*"
-         ],
-         "appID": "N8X52ZMF76.com.FlyingAcorn.NumberChain"
+         "appIDs": ["N8X52ZMF76.com.FlyingAcorn.NumberChain"],
+         "components": [
+           {
+             "/": "/LvJP/*"
+           },
+           {
+             "/": "/*"
+           }
+         ]
        }
      ]
    }
