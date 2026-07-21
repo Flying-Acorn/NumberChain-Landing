@@ -1,3 +1,5 @@
+---
+---
 <!DOCTYPE html>
 <html lang="fa">
 
@@ -38,9 +40,9 @@
             
             if (shouldShowSmartButton) {
                 // Constants for URLs
-                const PACKAGE_NAME = "com.FlyingAcorn.NumberChain";
+                const PACKAGE_NAME = "{{ site.package_name }}";
                 const BASE_URL = "https://nc.flyingacorn.studio";
-                const APP_STORE_LINK = "https://apps.apple.com/us/app/%D8%B2%D9%86%D8%AC%DB%8C%D8%B1%D9%87-%D8%A7%D8%B9%D8%A7%D8%AF-2248/id6569247863";
+                const APP_STORE_LINK = "https://apps.apple.com/us/app/id{{ site.apple_id }}";
                 const PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=" + PACKAGE_NAME;
                 const MARKET_LINK = "market://details?id=" + PACKAGE_NAME;
                 const CAFEBAZAAR_LINK = "https://cafebazaar.ir/app/" + PACKAGE_NAME;
@@ -286,16 +288,16 @@
         <section class="download-section">
             <h2>همین حالا دانلود کنید</h2>
             <div class="download-buttons">
-                <a href="https://cafebazaar.ir/app/com.FlyingAcorn.NumberChain" class="btn download-btn" target="_blank" rel="noopener">
+                <a href="https://cafebazaar.ir/app/{{ site.package_name }}" class="btn download-btn" target="_blank" rel="noopener">
                     <img src="assets/images/icons/cafebazaar.svg" alt="کافه بازار" class="responsive-icon"> کافه بازار
                 </a>
-                <a href="https://myket.ir/app/com.FlyingAcorn.NumberChain" class="btn download-btn" target="_blank" rel="noopener">
+                <a href="https://myket.ir/app/{{ site.package_name }}" class="btn download-btn" target="_blank" rel="noopener">
                     <img src="assets/images/icons/myket.svg" alt="مایکت" class="responsive-icon"> مایکت
                 </a>
-                <a href="https://play.google.com/store/apps/details?id=com.FlyingAcorn.NumberChain" class="btn download-btn" target="_blank" rel="noopener">
+                <a href="https://play.google.com/store/apps/details?id={{ site.package_name }}" class="btn download-btn" target="_blank" rel="noopener">
                     <img src="assets/images/icons/googleplay.svg" alt="گوگل پلی" class="responsive-icon"> گوگل پلی
                 </a>
-                <a href="https://apps.apple.com/us/app/%D8%B2%D9%86%D8%AC%DB%8C%D8%B1%D9%87-%D8%A7%D8%B9%D8%A7%D8%AF-2248/id6569247863" class="btn download-btn" target="_blank" rel="noopener">
+                <a href="https://apps.apple.com/us/app/id{{ site.apple_id }}" class="btn download-btn" target="_blank" rel="noopener">
                     <img src="assets/images/icons/appstore.svg" alt="اپ استور" class="responsive-icon"> اپ استور
                 </a>
             </div>

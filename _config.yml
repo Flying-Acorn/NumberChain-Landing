@@ -1,4 +1,8 @@
 include:
   - .well-known
   - LvJP
-permalink: /:path/
+
+# App identity - single source of truth for every store link on the site.
+# Used as {{ site.package_name }} / {{ site.apple_id }} in the pages below.
+package_name: com.FlyingAcorn.NumberChain
+apple_id: "6569247863"
