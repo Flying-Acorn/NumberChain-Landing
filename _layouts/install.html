@@ -19,7 +19,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#6a1b9a">
-    <title>دانلود زنجیره اعداد | {{ store_name }}</title>
+    <title>دانلود {{ site.app_name }} | {{ store_name }}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
 
     <noscript>
@@ -48,13 +48,6 @@
             text-align: center;
             padding: 1.5em;
             box-sizing: border-box;
-        }
-
-        .app-icon {
-            width: 96px;
-            height: 96px;
-            border-radius: 22%;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
         }
 
         .status {
@@ -105,12 +98,11 @@
 </head>
 
 <body>
-    <img src="/assets/images/icons/2248.png" alt="زنجیره اعداد" class="app-icon">
-    <p class="status" id="status">در حال انتقال به {{ store_name }}…</p>
+    <p class="status" id="status">برای نصب {{ site.app_name }}، در حال انتقال به {{ store_name }}…</p>
     <div class="spinner" id="spinner"></div>
     <div class="actions">
         <a id="manual-link" class="action-btn" href="{{ store_url }}">باز کردن {{ store_name }}</a>
-        <a class="action-btn secondary" href="/">صفحه اصلی زنجیره اعداد</a>
+        <a class="action-btn secondary" href="/">صفحه اصلی {{ site.app_name }}</a>
     </div>
 
     <script>
@@ -130,6 +122,7 @@
             };
             const PAGE_STORE = "{{ page.store }}";
             const PACKAGE_NAME = "{{ site.package_name }}";
+            const APP_NAME = "{{ site.app_name }}";
 
             // How long the spinner runs before the page settles into its manual links.
             const HINT_DELAY = 3000;
@@ -202,7 +195,7 @@
             // The visitor is being sent somewhere other than this page's own store,
             // so the wording has to follow them.
             if (store !== PAGE_STORE) {
-                status.textContent = "در حال انتقال به " + STORE_NAMES[store] + "…";
+                status.textContent = "برای نصب " + APP_NAME + "، در حال انتقال به " + STORE_NAMES[store] + "…";
                 manualLink.textContent = "باز کردن " + STORE_NAMES[store];
             }
 
