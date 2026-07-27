@@ -6,12 +6,14 @@
 {% assign bazaar_url = "https://cafebazaar.ir/app/" | append: site.package_name %}
 {% assign myket_url = "https://myket.ir/app/" | append: site.package_name %}
 {% case page.store %}
-{% when "market" %}{% assign store_url = play_url %}{% assign store_name = "فروشگاه" %}
+{% when "market" %}{% assign store_url = play_url %}{% assign store_name = "" %}
 {% when "play" %}{% assign store_url = play_url %}{% assign store_name = "گوگل پلی" %}
 {% when "appstore" %}{% assign store_url = appstore_url %}{% assign store_name = "اپ استور" %}
 {% when "bazaar" %}{% assign store_url = bazaar_url %}{% assign store_name = "کافه بازار" %}
 {% when "myket" %}{% assign store_url = myket_url %}{% assign store_name = "مایکت" %}
 {% endcase %}
+{% comment %} Title suffix: a page may override with `label`; stores fall back to their name; /install/ has neither, so no suffix. {% endcomment %}
+{% assign page_label = page.label | default: store_name %}
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 
@@ -20,7 +22,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
     <meta name="theme-color" content="#6a1b9a">
-    <title>دانلود {{ site.app_name }} | {{ store_name }}</title>
+    <title>دانلود {{ site.app_name }}{% if page_label != "" %} | {{ page_label }}{% endif %}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
 
     {% unless page.store == "market" %}
@@ -132,7 +134,6 @@
                 myket: "{{ myket_url }}"
             };
             const STORE_NAMES = {
-                market: "فروشگاه",
                 play: "گوگل پلی",
                 appstore: "اپ استور",
                 bazaar: "کافه بازار",
@@ -228,8 +229,7 @@
             const status = document.getElementById("status");
             manualLink.href = target;
 
-            // The market page's own name is the generic "فروشگاه"; keep the chooser wording.
-            // Otherwise, if the platform rule redirected elsewhere, follow the visitor.
+            // If the platform rule redirected to a different store, follow the visitor.
             if (store !== PAGE_STORE) {
                 status.textContent = "برای نصب " + APP_NAME + "، در حال انتقال به " + STORE_NAMES[store] + "…";
                 manualLink.textContent = "باز کردن " + STORE_NAMES[store];
