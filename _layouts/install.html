@@ -1,6 +1,7 @@
-<!-- Shared shell for the /install/ campaign pages. A page picks its store with
-     `store: market|play|appstore|bazaar|myket` in its front matter; everything else lives here.
-     `market` fires Android's native store chooser via market://; the rest go to one store. -->
+<!-- Shared shell for the /install/ campaign pages (the paid-ad destinations; branding lives on /).
+     A page picks its store with `store: market|play|appstore|bazaar|myket` in its front matter.
+     Every page redirects immediately - `market` fires Android's native store chooser via an
+     intent:// (market://) with a Google Play fallback; the rest go straight to one store. -->
 {% assign play_url = "https://play.google.com/store/apps/details?id=" | append: site.package_name %}
 {% assign appstore_url = "https://apps.apple.com/us/app/id" | append: site.apple_id %}
 {% assign bazaar_url = "https://cafebazaar.ir/app/" | append: site.package_name %}
@@ -25,11 +26,9 @@
     <title>دانلود {{ site.app_name }}{% if page_label != "" %} | {{ page_label }}{% endif %}</title>
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
 
-    {% unless page.store == "market" %}
     <noscript>
         <meta http-equiv="refresh" content="0;url={{ store_url }}">
     </noscript>
-    {% endunless %}
 
     <style>
         @font-face {
@@ -53,13 +52,6 @@
             text-align: center;
             padding: 1.5em;
             box-sizing: border-box;
-        }
-
-        .app-icon {
-            width: 96px;
-            height: 96px;
-            border-radius: 22%;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
         }
 
         .status {
@@ -110,20 +102,14 @@
 </head>
 
 <body>
-{% if page.store == "market" %}
-    <img src="{{ site.app_icon }}" alt="{{ site.app_name }}" class="app-icon">
-    <p class="status" id="status">برای نصب {{ site.app_name }}، دکمه زیر را بزنید:</p>
-    <div class="actions">
-        <a id="install-btn" class="action-btn" href="{{ store_url }}">نصب {{ site.app_name }}</a>
-    </div>
-{% else %}
-    <p class="status" id="status">برای نصب {{ site.app_name }}، در حال انتقال به {{ store_name }}…</p>
+    <p class="status" id="status">{% if page.store == "market" %}در حال انتقال برای نصب {{ site.app_name }}…{% else %}برای نصب {{ site.app_name }}، در حال انتقال به {{ store_name }}…{% endif %}</p>
     <div class="spinner" id="spinner"></div>
     <div class="actions">
-        <a id="manual-link" class="action-btn" href="{{ store_url }}">باز کردن {{ store_name }}</a>
+        <a id="manual-link" class="action-btn" href="{{ store_url }}">نصب {{ site.app_name }}</a>
+        {% unless page.store == "market" %}
         <a class="action-btn secondary" href="/">صفحه اصلی {{ site.app_name }}</a>
+        {% endunless %}
     </div>
-{% endif %}
 
     <script>
         (function () {
@@ -180,9 +166,9 @@
             }
 
             // Google Play, Cafe Bazaar and Myket all register the market:// scheme. Firing it
-            // lets Android show its own store chooser (unless the user has set a default store,
-            // in which case Android honours that). browser_fallback_url covers a phone with no
-            // market app installed, where the scheme would otherwise resolve to nothing.
+            // lets Android show its own store chooser (unless the user has set a default store).
+            // browser_fallback_url covers the case where the scheme cannot launch - a phone with
+            // no market app, or a browser that blocks the gesture-less launch - by landing on Play.
             function marketIntent() {
                 const referrer = playReferrer();
                 return "intent://details?id=" + PACKAGE_NAME + referrer +
@@ -190,26 +176,6 @@
                     "S.browser_fallback_url=" + encodeURIComponent(STORES.play + referrer) + ";end";
             }
 
-            // --- Android store chooser -------------------------------------------------
-            // Chrome refuses to launch an intent:// from an automatic (gesture-less) page
-            // load and navigates to its browser_fallback_url instead - which is why an
-            // auto-redirect here landed on Google Play rather than the chooser. So we set the
-            // market intent on a button and let the visitor's TAP provide the gesture; then
-            // Android shows its native store chooser (unless a default store is set).
-            if (PAGE_STORE === "market") {
-                if (REDIRECT_MISMATCHED_PLATFORM && isIOS) {
-                    // None of Bazaar / Myket / Play can serve an iPhone - send it to the App Store.
-                    window.location.replace(STORES.appstore + appStoreCampaign());
-                    return;
-                }
-                const installBtn = document.getElementById("install-btn");
-                if (installBtn) {
-                    installBtn.href = isAndroid ? marketIntent() : STORES.play + playReferrer();
-                }
-                return;
-            }
-
-            // --- Single-store pages: redirect immediately (plain https, no gesture needed) --
             let store = PAGE_STORE;
             if (REDIRECT_MISMATCHED_PLATFORM) {
                 if (isIOS && store !== "appstore") store = "appstore";
@@ -217,7 +183,11 @@
             }
 
             let target;
-            if (store === "play") {
+            if (store === "market") {
+                // Android gets the native chooser; off Android there is no chooser to show,
+                // so Play's own page is the honest fallback.
+                target = isAndroid ? marketIntent() : STORES.play + playReferrer();
+            } else if (store === "play") {
                 target = STORES.play + playReferrer();
             } else if (store === "appstore") {
                 target = STORES.appstore + appStoreCampaign();
@@ -242,9 +212,10 @@
                 status.textContent = "اگر به‌صورت خودکار منتقل نشدید:";
             }, HINT_DELAY);
 
-            // The store handoff is the whole point of this page, so it goes out immediately.
-            // A tap on the manual link re-fires the same intent with a user gesture, which
-            // some browsers require before launching an external app.
+            // Redirect immediately - no tap. On a real paid-ad click the in-app browser / Custom
+            // Tab supplies the activation, so market:// opens the chooser like AppMetrica's 302;
+            // when that activation is missing (address-bar paste, desktop) the intent's
+            // browser_fallback_url lands on Google Play rather than doing nothing.
             // replace() also keeps this page out of history, so "back" from the store returns
             // to wherever the campaign link was clicked instead of re-triggering us.
             window.location.replace(target);
