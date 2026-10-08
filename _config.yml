@@ -1,0 +1,10 @@
+include:
+  - .well-known
+  - LvJP
+
+# App identity - single source of truth for every store link on the site.
+# Used as {{ site.package_name }} / {{ site.apple_id }} in the pages below.
+package_name: com.FlyingAcorn.NumberChain
+app_name: "زنجیره‌اعداد:‌۲۲۴۸"
+app_icon: "/assets/images/icons/2248.png"
+apple_id: "6569247863"
