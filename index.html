@@ -196,8 +196,16 @@
                             }
                         }, 2500);
                     } else if (isAndroid) {
-                        // Android installs go to Google Play
-                        window.location.href = PLAY_STORE_LINK;
+                        // The phone's own store chooser first: a store intent naming no store, so every store app
+                        // installed can answer. When none does, Chrome opens Google Play's page.
+                        window.location.href = "intent://details?id=" + PACKAGE_NAME + "#Intent;scheme=market;" +
+                            "S.browser_fallback_url=" + encodeURIComponent(PLAY_STORE_LINK) + ";end";
+                        // An app's own browser (Instagram, Telegram…) ignores intent://: when the page still has the
+                        // focus a moment later, nothing answered, so go to Google Play.
+                        setTimeout(() => {
+                            if (!appOpened && document.visibilityState === "visible" && document.hasFocus())
+                                window.location.href = PLAY_STORE_LINK;
+                        }, 2000);
                     } else {
                         // On desktop, show message immediately
                         alert('این بازی فقط برای موبایل در دسترس است. لطفا از طریق اپ استور یا گوگل پلی دانلود کنید.');
@@ -208,7 +216,7 @@
                     const checkAppOpened = function() {
                         appOpened = true;
                         // Only close the opened window for Android (iOS doesn't use window.open)
-                        if (isAndroid && newWindow && !newWindow.closed) {
+                        if (isAndroid && typeof newWindow !== 'undefined' && newWindow && !newWindow.closed) {
                             newWindow.close();
                         }
                     };
@@ -223,7 +231,7 @@
                     window.addEventListener('pagehide', checkAppOpened);
                     
                     // Set up fallback to store after timeout (none needed for current logic)
-                    // iOS handles its own fallback, Android goes straight to Google Play
+                    // iOS handles its own fallback, Android falls back to Google Play above
                 });
                 
                 // Remove the separate close button event listener since it's now integrated
@@ -231,7 +239,7 @@
         });
     </script>
     <title>زنجیره اعداد: 2248 - بازی پازلی سرگرم‌کننده</title>
-    <meta name="description" content="دانلود بازی زنجیره اعداد: 2248، یک بازی پازلی سرگرم‌کننده و اعتیادآور. در دسترس در اپ استور، گوگل پلی، کافه بازار و مایکت.">
+    <meta name="description" content="دانلود بازی زنجیره اعداد: 2248، یک بازی پازلی سرگرم‌کننده و اعتیادآور. در دسترس در اپ استور و گوگل پلی.">
     <meta name="keywords" content="بازی، پازل، زنجیره اعداد، 2248، موبایل، اندروید، iOS">
     <meta name="author" content="Flying Acorn">
     <meta name="robots" content="index, follow">
@@ -240,7 +248,7 @@
     
     <!-- Open Graph Tags -->
     <meta property="og:title" content="زنجیره اعداد: 2248 - بازی پازلی سرگرم‌کننده">
-    <meta property="og:description" content="دانلود بازی زنجیره اعداد: 2248، یک بازی پازلی سرگرم‌کننده و اعتیادآور. در دسترس در اپ استور، گوگل پلی، کافه بازار و مایکت.">
+    <meta property="og:description" content="دانلود بازی زنجیره اعداد: 2248، یک بازی پازلی سرگرم‌کننده و اعتیادآور. در دسترس در اپ استور و گوگل پلی.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://nc.flyingacorn.studio">
     <meta property="og:image" content="https://nc.flyingacorn.studio/assets/images/Cover.png">
