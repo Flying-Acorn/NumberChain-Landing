@@ -92,12 +92,6 @@
             border: 1px solid rgba(255, 255, 255, 0.7);
         }
 
-        .store-logo {
-            width: 21px;
-            height: 21px;
-            flex: 0 0 auto;
-        }
-
         .section-title {
             font-weight: 600;
             margin-top: 0.4em;
@@ -161,7 +155,10 @@
                 // Safari's banner opens the installed game with this link.
                 document.getElementById("app-banner").setAttribute("content",
                     "app-id=" + APPLE_ID + ", app-argument=" + inviteLink());
-                document.getElementById("ios-hint").hidden = false;
+                // Only Safari shows the banner: Chrome, Firefox, Edge, Google's app and the apps' own browsers (no
+                // Safari/ token) do not, so they get no pointer to it.
+                if (/Safari\//.test(userAgent) && !/CriOS|FxiOS|EdgiOS|OPiOS|GSA\//.test(userAgent))
+                    document.getElementById("ios-hint").hidden = false;
             }
         })();
     </script>
