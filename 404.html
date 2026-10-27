@@ -2,8 +2,16 @@
 <html>
 <head>
     <script>
-        const currentPath = window.location.pathname + window.location.search;
-        window.location.href = "/index.html?from=404&path=" + encodeURIComponent(currentPath);
+        // A friend invite (/LvJP/AddFriend?ufriend=…) on a path the host did not map to the invite page (a different
+        // case, a trailing segment): the invite page, with the query.
+        // The page itself never redirects to itself, so a missing build cannot loop.
+        if (/^\/lvjp\/addfriend(\/|$)/i.test(window.location.pathname) &&
+            window.location.pathname !== "/LvJP/AddFriend/") {
+            window.location.replace("/LvJP/AddFriend/" + window.location.search);
+        } else {
+            const currentPath = window.location.pathname + window.location.search;
+            window.location.href = "/index.html?from=404&path=" + encodeURIComponent(currentPath);
+        }
     </script>
 </head>
 <body></body>

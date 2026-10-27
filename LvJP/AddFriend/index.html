@@ -1,0 +1,170 @@
+---
+# Friend invites. The game shares https://nc.flyingacorn.studio/LvJP/AddFriend?ufriend=<player uuid>[&tid=<tracker id>]
+# (FriendHandler.GetInviteUrl); with the game installed and the domain verified, the phone opens the game (it sends the
+# friend request) and never shows this. Otherwise the visitor lands here: open the game anyway, or install.
+# "Open the game": on Android the same https link naming the game's package. iPhone has no button - the game registers
+# no URL scheme of its own, and a link to this same site stays in Safari - so Safari's banner carries the https link.
+# No code to type: the invite is the player's UUID, and the game has no box that takes one.
+---
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#6a1b9a">
+    <title>دعوت دوستی {{ site.app_name }}</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
+    <!-- iPhone: Safari's banner opens the installed game with the invite (app-argument, set below). -->
+    <meta name="apple-itunes-app" id="app-banner" content="app-id={{ site.apple_id }}">
+
+    <style>
+        @font-face {
+            font-family: 'YekanBakh';
+            src: url('/assets/fonts/YekanBakh-Regular.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        body {
+            font-family: 'YekanBakh', sans-serif;
+            background-color: #6a1b9a;
+            color: #ffffff;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1.1em;
+            text-align: center;
+            padding: 1.5em 16px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: clamp(20px, 6vw, 26px);
+            margin: 0;
+        }
+
+        p {
+            margin: 0;
+            font-size: clamp(14px, 4vw, 17px);
+            line-height: 1.8;
+        }
+
+        .app-icon {
+            width: 84px;
+            height: 84px;
+            border-radius: 22%;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7em;
+            width: min(100%, 300px);
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55em;
+            padding: 0.75em 1.2em;
+            border-radius: 50px;
+            font: inherit;
+            font-size: clamp(14px, 3.8vw, 16px);
+            font-weight: 600;
+            text-decoration: none;
+            background: #ffffff;
+            color: #4a148c;
+            border: 0;
+            cursor: pointer;
+        }
+
+        .action-btn.secondary {
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .store-logo {
+            width: 21px;
+            height: 21px;
+            flex: 0 0 auto;
+        }
+
+        .section-title {
+            font-weight: 600;
+            margin-top: 0.4em;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+    <img class="app-icon" src="/assets/images/icons/icon-192.png" width="84" height="84" alt="{{ site.app_name }}">
+    <h1>بیا توی {{ site.app_name }} با هم دوست بشیم! 🤝</h1>
+
+    <div class="actions" id="open-block" hidden>
+        <a class="action-btn" id="open-game" href="#">بازی رو باز کن</a>
+    </div>
+
+    <p id="ios-hint" hidden>بازی رو داری؟ از نوار بالای صفحه بازش کن.</p>
+
+    {% include invite-install.html %}
+
+    <script>
+        (function () {
+            const HOST = "nc.flyingacorn.studio";
+            const PACKAGE_NAME = "{{ site.package_name }}";
+            const APPLE_ID = "{{ site.apple_id }}";
+
+            const params = new URLSearchParams(window.location.search);
+            // The inviter's Soil UUID (FriendHandler.UuidKey); the game ignores anything that is not a GUID.
+            const uuid = (params.get("ufriend") || "").trim();
+            const validUuid = /^[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}$/.test(uuid) ? uuid : "";
+
+            const userAgent = navigator.userAgent || navigator.vendor || "";
+            const isAndroid = /android/i.test(userAgent);
+            // iPadOS reports a Mac; a Mac with a touch screen is one.
+            const isIOS = !isAndroid && (/iPad|iPhone|iPod/.test(userAgent) ||
+                (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1));
+
+            // The invite exactly as shared (tid included), so the game handles it as it would from the chat.
+            function inviteLink() {
+                let link = "https://" + HOST + "/LvJP/AddFriend?ufriend=" + encodeURIComponent(validUuid);
+                const tid = params.get("tid");
+                if (tid) link += "&tid=" + encodeURIComponent(tid);
+                return link;
+            }
+
+            if (!validUuid)
+                return;
+
+            if (isAndroid) {
+                // Names the game, so it opens even where Android could not verify the link (the reason the
+                // visitor is here at all). Not installed: Chrome comes back to this page.
+                const link = inviteLink();
+                document.getElementById("open-game").href = "intent://" + link.slice("https://".length) +
+                    "#Intent;scheme=https;package=" + PACKAGE_NAME +
+                    ";S.browser_fallback_url=" + encodeURIComponent(window.location.href.split("#")[0] + "#install") + ";end";
+                document.getElementById("open-block").hidden = false;
+            } else if (isIOS) {
+                // Safari's banner opens the installed game with this link.
+                document.getElementById("app-banner").setAttribute("content",
+                    "app-id=" + APPLE_ID + ", app-argument=" + inviteLink());
+                document.getElementById("ios-hint").hidden = false;
+            }
+        })();
+    </script>
+</body>
+
+</html>
